@@ -1,0 +1,34 @@
+name: Daily-Automation
+on:
+  schedule:
+    - cron: '0 5 * * *'   # 05:00 UTC (~07:00 Paris)
+  workflow_dispatch:
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: Bootstrap DB
+        run: python scripts/bootstrap.py
+      - name: Self-check
+        run: python scripts/self_check.py
+      - name: Run pipeline
+        run: python scripts/run_pipeline.py
+      - name: Auto-repair (on failure)
+        if: failure()
+        run: python scripts/auto_repair.py
+      - name: Commit static updates (if any)
+        run: |
+          git config user.name "clausewatch-bot"
+          git config user.email "bot@clausewatch.local"
+          git add frontend/pages/updates || true
+          git diff --cached --quiet || (git commit -m "chore: daily updates" && git push)

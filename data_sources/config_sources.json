@@ -1,0 +1,66 @@
+{
+  "sources": {
+    "legifrance": {
+      "url": "https://www.legifrance.gouv.fr/search/juri",
+      "type": "html_scraping",
+      "frequency": "daily",
+      "selectors": {
+        "title": ".resultTitle",
+        "date": ".resultDate",
+        "content": ".resultContent"
+      },
+      "rate_limit": {
+        "requests_per_minute": 10,
+        "delay_between_requests": 6
+      }
+    },
+    "cnil": {
+      "url": "https://www.cnil.fr/fr/decisions",
+      "type": "rss",
+      "frequency": "daily",
+      "rate_limit": {
+        "requests_per_minute": 30,
+        "delay_between_requests": 2
+      }
+    },
+    "conseil_etat": {
+      "url": "https://www.conseil-etat.fr/ressources/decisions-contentieuses",
+      "type": "api",
+      "api_key_required": true,
+      "frequency": "daily",
+      "rate_limit": {
+        "requests_per_minute": 60,
+        "delay_between_requests": 1
+      }
+    }
+  },
+  "topics": [
+    {
+      "name": "non_concurrence",
+      "keywords": [
+        "non-concurrence",
+        "clause de non-concurrence",
+        "interdiction de concurrence"
+      ],
+      "weight": 1.0
+    },
+    {
+      "name": "confidentialite",
+      "keywords": [
+        "confidentialité",
+        "secret professionnel",
+        "clause de confidentialité"
+      ],
+      "weight": 1.0
+    },
+    {
+      "name": "rgpd",
+      "keywords": [
+        "RGPD",
+        "données personnelles",
+        "protection des données"
+      ],
+      "weight": 1.2
+    }
+  ]
+}
